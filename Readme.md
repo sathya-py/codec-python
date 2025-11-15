@@ -1,58 +1,59 @@
-**Code Collator**
+**Code Collator (codex)**
 
-This Python application helps you find and summarize code files within a specified directory. It can handle various file extensions, skip specific folders and extensions, and create a summary report with file paths and content (optional).
+A clean-architecture code collator with a CLI and TUI. It scans a directory for specified file extensions, optionally skips folders/extensions, and writes a consolidated summary with file paths and content.
 
-**Features:**
+**Key Features**
 
-- Finds files based on user-defined extensions (e.g., `.txt`, `.py`, `.java`).
-- Allows skipping specific extensions and folders.
-- Generates a summary report with file paths and content (optional).
-- Utilizes multi-processing for faster execution (optional).
+- Discovery + summary services separated via repository and controller layers.
+- Result/Failure pattern for fail-fast error handling (no exceptions for control flow).
+- TUI built with Textual + Rich; CLI fallback remains available.
+- Dependency injection via a simple `ServiceContainer`.
 
-**Installation**
+**Install (uv)**
 
-**Prerequisites:**
+Project already initialized for uv. From the project root:
 
-- Python 3 ([https://www.python.org/downloads/](https://www.google.com/url?sa=E&source=gmail&q=https://www.python.org/downloads/)))
-
-**Instructions:**
-
-1.  Save the code as a Python file named `codec2.py`.
-
-2.  Open a terminal or command prompt and navigate to the directory containing the script (`codec2.py`).
-
-3.  Run the application using the following command:
-
-    ```bash
-    python codec2.py <directory> [options]
-    ```
-
-    Replace `<directory>` with the path to the directory you want to search.
-
-**Options:**
-
-- `-o`, `--output`: Specify the output summary file name (default: summary.txt).
-- `-s`, `--skip`: List of file extensions to skip (e.g., `-s ".jpg .png"`).
-- `-e`, `--extensions`: List of valid extensions to include (default: includes common code extensions).
-- `--full-path`: Include full file paths in the output.
-- `--skip-folders`: List of folder names to skip (e.g., `--skip-folders "node_modules .git"`).
-
-**Example Usage:**
-
-```bash
-python codec2.py ./my_code -o code_summary.txt -s ".md .html" --full-path
+```powershell
+uv sync
 ```
 
-This command will search for files with extensions `.txt`, `.py`, `.c`, `.cpp`, etc. (excluding `.md` and `.html`) within the `./my_code` directory, create a summary report named `code_summary.txt`, and include full file paths in the output.
+This will create `.venv` and install dependencies from `pyproject.toml`.
 
-**Multiprocessing Note:**
+**Run**
 
-While the application supports multi-processing for faster execution, it's currently disabled by default. To enable it, uncomment the line `with Pool(processes=cpu_count()) as pool:` in the `main` function. However, keep in mind that multi-processing might not always be beneficial for smaller datasets.
+- TUI (interactive):
+
+```powershell
+./dist/codec.exe --tui
+```
+
+- CLI (non-interactive):
+
+```powershell
+./dist/codec.exe <directory> -o summary.txt \
+    -e .py .ts .json --skip-folders .git node_modules --full-path
+```
+
+**Options**
+
+- `-o`, `--output`: Output summary file (default: `summary.txt`).
+- `-s`, `--skip`: Extensions to skip (e.g., `.jpg .png`).
+- `-e`, `--extensions`: Extensions to include (default preset).
+- `--full-path`: Include absolute file paths rather than relative.
+- `--skip-folders`: Folder names to ignore (e.g., `node_modules .git`).
+
+**TUI Keys**
+
+- `r`: Run discovery + summary
+- `q` / `Ctrl+C`: Quit
+- `g`: Open GitHub repo (https://github.com/sathya-py/codec-python)
+
+**Architecture**
+
+- Package: `codex/` with `repositories`, `services`, `controller`, `file_reader`, `result`, `failure`.
+- Entry point: `codec3.py` for both CLI and TUI (`--tui`) while packaged as `codec.exe`.
+- Tests to be added with Given_When_Then naming and AAA structure; goal ≥90% coverage.
 
 **Contributing**
 
-We welcome contributions to this project\! Feel free to fork the repository, make changes, and submit pull requests.
-
-**License**
-
-This project is licensed under the MIT License. See the LICENSE file for details.
+PRs welcome. Please follow SOLID/DRY/KISS/YAGNI, keep files <200 lines and functions <50 lines, and prefer composition over inheritance.

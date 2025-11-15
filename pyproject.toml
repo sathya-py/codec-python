@@ -1,0 +1,44 @@
+[project]
+name = "codecolater"
+version = "4.0.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "chardet>=5.2.0",
+    "rich>=14.2.0",
+    "textual>=6.6.0",
+]
+
+[project.scripts]
+codecolater = "codec3:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "I",  # pycodestyle, pyflakes, isort
+]
+ignore = []
+
+[tool.mypy]
+python_version = "3.13"
+disallow_untyped_defs = true
+warn_unused_ignores = true
+warn_return_any = true
+no_implicit_optional = true
+strict_optional = true
+exclude = ["dist/", "build/", "env/", ".venv/"]
+
+[tool.pytest.ini_options]
+addopts = "-q --cov=codex --cov-report=term-missing"
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.16.0",
+    "pytest>=9.0.1",
+    "pytest-cov>=7.0.0",
+]
